@@ -8,9 +8,15 @@ module React
 
         config.react_router.max_renderers = 10
         config.react_router.timeout = 20 # seconds
-        config.react_router.react_js = lambda { File.read(::Rails.application.assets.resolve('react.js')) }
-        config.react_router.react_server_js = lambda { File.read(::Rails.application.assets.resolve('react-server.js')) }
-        config.react_router.react_router_js = lambda { File.read(::Rails.application.assets.resolve('react_router.js')) }
+        if ::Rails.env.production?
+          config.react_router.react_js = lambda { File.read(::Rails.application.config.assets.resolve('react.js')) }
+          config.react_router.react_server_js = lambda { File.read(::Rails.application.config.assets.resolve('react-server.js')) }
+          config.react_router.react_router_js = lambda { File.read(::Rails.application.config.assets.resolve('react_router.js')) }
+        else
+          config.react_router.react_js = lambda { File.read(::Rails.application.assets.resolve('react.js')) }
+          config.react_router.react_server_js = lambda { File.read(::Rails.application.assets.resolve('react-server.js')) }
+          config.react_router.react_router_js = lambda { File.read(::Rails.application.assets.resolve('react_router.js')) }
+        end
         config.react_router.route_filenames = ['components.js']
 
         # Include the react-router-rails view helper lazily
